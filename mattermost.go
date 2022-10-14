@@ -72,6 +72,7 @@ func createChannel(name string, tname string) {
 
 	getClient().AddChannelMember(rchannel.Id, "1dm71jzndf8jtedqbbdx7uc3co")
 	getClient().AddChannelMember(rchannel.Id, "n4hw1yqaq7rzpjgitxq7uqj9ke")
+	getClient().AddChannelMember(rchannel.Id, "rnbga9rm3bfa5nz1ka78itcs6h")
 }
 
 func WritePostToChannel(channel string, team string, text string) {
