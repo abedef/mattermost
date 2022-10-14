@@ -45,10 +45,13 @@ func createChannel(name string, tname string) {
 	channel.Purpose = ""
 	channel.Type = model.CHANNEL_PRIVATE
 	channel.TeamId = team.Id
-	_, resp = getClient().CreateChannel(channel)
+	rchannel, resp := getClient().CreateChannel(channel)
 	if resp.Error != nil {
 		log.Fatal(resp.Error)
 	}
+
+	getClient().AddChannelMember(rchannel.Id, "1dm71jzndf8jtedqbbdx7uc3co")
+	getClient().AddChannelMember(rchannel.Id, "n4hw1yqaq7rzpjgitxq7uqj9ke")
 }
 
 func WritePostToChannel(channel string, team string, text string) {
