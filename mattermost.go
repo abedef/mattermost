@@ -19,7 +19,7 @@ func Configure(url string, token string) {
 	hasBeenConfigured = true
 }
 
-func Listen(address string, ch chan string) {
+func Listen(address string, ch chan *model.WebSocketEvent) {
 	for {
 		webSocketClient, err := model.NewWebSocketClient4(address, getClient().AuthToken)
 		if err != nil {
@@ -31,7 +31,7 @@ func Listen(address string, ch chan string) {
 		for resp := range webSocketClient.EventChannel {
 			switch resp.EventType() {
 			case model.WEBSOCKET_EVENT_POSTED:
-				ch <- resp.EventType()
+				ch <- resp
 			default:
 				log.Printf("Unhandled %v event", resp.EventType())
 			}
