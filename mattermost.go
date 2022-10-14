@@ -34,21 +34,39 @@ func getClient() *model.Client4 {
 	return client
 }
 
-func writePostToChannel(channel string, text string) {
+func createChannel(name string, tname string) {
+	team, resp := getClient().GetTeamByName(tname, "")
+	if resp.Error != nil {
+		log.Fatal(resp.Error)
+	}
+	channel := &model.Channel{}
+	channel.Name = name
+	channel.DisplayName = name
+	channel.Purpose = ""
+	channel.Type = model.CHANNEL_PRIVATE
+	channel.TeamId = team.Id
+	_, resp = getClient().CreateChannel(channel)
+	if resp.Error != nil {
+		log.Fatal(resp.Error)
+	}
+}
+
+func WritePostToChannel(channel string, team string, text string) {
+	rchannel, resp := getClient().GetChannelByNameForTeamName(channel, team, "")
+	if resp.Error != nil {
+		createChannel(channel, team)
+		rchannel, resp = getClient().GetChannelByNameForTeamName(channel, team, "")
+		if resp.Error != nil {
+			log.Fatal(resp.Error)
+		}
+	}
+
 	post := model.Post{
-		ChannelId: channel,
+		ChannelId: rchannel.Id,
 		Message:   text,
 	}
 
 	_, response := getClient().CreatePost(&post)
 
 	log.Print(response)
-}
-
-func WriteProdPost(text string) {
-	writePostToChannel("qz1wyhymmfd5imeaerh83ydpnh", text)
-}
-
-func WritePostDev(text string) {
-	writePostToChannel("8wa1jsbiui859ni8qicgo9314w", text)
 }
