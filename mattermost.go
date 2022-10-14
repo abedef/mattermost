@@ -19,6 +19,21 @@ func Configure(url string, token string) {
 	hasBeenConfigured = true
 }
 
+func Listen(address string) {
+	for {
+		webSocketClient, err := model.NewWebSocketClient4(address, getClient().AuthToken)
+		if err != nil {
+			log.Print(err)
+		}
+		log.Print("Connected to WS")
+		webSocketClient.Listen()
+
+		for resp := range webSocketClient.EventChannel {
+			log.Print(resp)
+		}
+	}
+}
+
 func getClient() *model.Client4 {
 	if client != nil {
 		return client
